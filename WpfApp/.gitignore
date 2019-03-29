@@ -32,3 +32,5 @@ bld/
 
 # VSCode
 .vscode/
+
+packages/
