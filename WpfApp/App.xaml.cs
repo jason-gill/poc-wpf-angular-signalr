@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace WpfApp
 {
@@ -13,5 +7,13 @@ namespace WpfApp
     /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            // Start SignalR here
+
+            // Create the startup window
+            MainWindow wnd = new MainWindow {Title = "Wpf App"};
+            wnd.Show();
+        }
     }
 }
