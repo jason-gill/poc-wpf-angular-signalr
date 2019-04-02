@@ -1,4 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Windows;
+using Microsoft.AspNet.SignalR;
+using Microsoft.Owin.Hosting;
 
 namespace WpfApp
 {
@@ -10,10 +15,20 @@ namespace WpfApp
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             // Start SignalR here
+            Task.Run(() => this.StartWebServer());
 
             // Create the startup window
             MainWindow wnd = new MainWindow {Title = "Wpf App"};
             wnd.Show();
+        }
+
+        private void StartWebServer()
+        {
+            // TODO - Get from config
+            var url = "http://localhost:9013/";
+
+            WebApp.Start<WebStartupConfig>(url);
+            Debug.WriteLine($"Server started at: {url}");
         }
     }
 }
