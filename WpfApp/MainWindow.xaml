@@ -8,9 +8,11 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="300*"/>
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Margin="10">
+        <Button Grid.Row="0" x:Name="ConnectButton" HorizontalAlignment="Right" Margin="10" Content="Launch WebApp" Width="100" Click="LaunchWebAppButton_Click"></Button>
+        <Border Grid.Row="1" Margin="10">
             <ListView x:Name="MessagesListView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></ListView>
         </Border>
 </Grid>

@@ -55,7 +55,10 @@ namespace WpfApp
         private void OnClientConnect(string clientId)
         {
             AppendMessage($"Client connected: {clientId}");
-            _contractHubProxy.Invoke("SendToClient", clientId, "[Contract Name]");
+
+            var contractName = "<Contract Name>";
+            _contractHubProxy.Invoke("SendToClient", clientId, contractName);
+            AppendMessage($"Sent contract name: {contractName} to client: {clientId}");
         }
         private void OnClientDisconnected(bool stopCalled, string clientId)
         {
@@ -81,6 +84,11 @@ namespace WpfApp
         private void AppendMessage(string message)
         {
             MessagesListView.Items?.Add(message);
+        }
+
+        private void LaunchWebAppButton_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("http://localhost:4200/contract");
         }
     }
 }

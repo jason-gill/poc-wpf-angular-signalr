@@ -25,6 +25,5 @@ export class ContractFormComponent implements OnInit {
     const json = JSON.stringify(this._contract);
 
     this.contractSignalRService.save(json);
-    alert('You submitted: ' + JSON.stringify(json));
   }
 }
