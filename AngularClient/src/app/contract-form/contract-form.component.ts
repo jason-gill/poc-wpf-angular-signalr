@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Contract} from '../models/contract';
 import {ContractSignalRService} from '../services/contract-signal-r.service';
 
@@ -9,16 +9,20 @@ import {ContractSignalRService} from '../services/contract-signal-r.service';
 })
 export class ContractFormComponent implements OnInit {
 
-  model = new Contract();
+  private _contract = new Contract();
 
-  constructor(private contractSignalRService: ContractSignalRService) { }
+  constructor(private contractSignalRService: ContractSignalRService, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.contractSignalRService.contract$.subscribe(contract => {
+      this._contract = contract;
+      this.cd.detectChanges();
+    });
     this.contractSignalRService.startConnection();
   }
 
   onSubmit() {
-    const json = JSON.stringify(this.model);
+    const json = JSON.stringify(this._contract);
 
     this.contractSignalRService.save(json);
     alert('You submitted: ' + JSON.stringify(json));

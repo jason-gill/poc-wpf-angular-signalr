@@ -7,6 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
-    </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300*"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Margin="10">
+            <ListView x:Name="MessagesListView" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"></ListView>
+        </Border>
+</Grid>
 </Window>

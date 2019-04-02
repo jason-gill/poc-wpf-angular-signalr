@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Dynamic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -10,7 +11,12 @@ namespace WpfApp
     {
         public void Save(string contractJson)
         {
-            Debug.WriteLine($"Contract: {contractJson}");
+            Clients.Others.OnDataFromClient(contractJson);
+        }
+
+        public void SendToClient(string clientId, string contractName)
+        {
+            Clients.Client(clientId).dataFromServer(contractName);
         }
    }
 
@@ -18,13 +24,17 @@ namespace WpfApp
     {
         public override Task OnConnected()
         {
-            Debug.WriteLine("Client connected: " + Context.ConnectionId);
+            Clients.Others.OnClientConnect(Context.ConnectionId);
             return base.OnConnected();
         }
 
         public override Task OnDisconnected(bool stopCalled)
         {
-            Debug.WriteLine("Client disconnected: " + Context.ConnectionId);
+            dynamic data = new ExpandoObject();
+            data.stopCalled = stopCalled;
+            data.clientId = Context.ConnectionId;
+
+            Clients.Others.OnClientDisConnected(data);
             return base.OnDisconnected(stopCalled);
         }
     }
