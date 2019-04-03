@@ -1,20 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Client;
 
 namespace WpfApp
@@ -27,7 +12,6 @@ namespace WpfApp
         private HubConnection _hubConnection;
         private IHubProxy _contractHubProxy;
 
-        private const string SignalRUrl = "http://localhost:9013";
         private const string AngularUrl = "http://localhost:4200";
         private const string HubName = "contract";
 
@@ -35,7 +19,7 @@ namespace WpfApp
         {
             InitializeComponent();
 
-            _hubConnection = new HubConnection(SignalRUrl);
+            _hubConnection = new HubConnection(SignalRUri.Url);
             _contractHubProxy = _hubConnection.CreateHubProxy(HubName);
 
             _contractHubProxy.On("OnClientConnect", (clientId) =>
@@ -93,7 +77,7 @@ namespace WpfApp
 
         private void LaunchWebAppButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start($"{AngularUrl}/{HubName}?signalRUrl={SignalRUrl}");
+            Process.Start($"{AngularUrl}/{HubName}?signalRUrl={SignalRUri.Url}");
         }
     }
 }
