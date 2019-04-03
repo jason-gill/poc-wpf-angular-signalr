@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {Contract} from '../models/contract';
+import {ActivatedRoute} from '@angular/router';
 
 declare var $: any;
 @Injectable({
   providedIn: 'root'
 })
 export class ContractSignalRService {
+  private signalRServerEndPoint: string;
   private connection: any;
   private proxy: any;
 
   private contractSource = new BehaviorSubject<Contract>({});
   public contract$ = this.contractSource.asObservable();
 
-  constructor() { }
+  constructor(private route: ActivatedRoute) {
+    this.signalRServerEndPoint = this.route.snapshot.queryParamMap.get('signalRUrl');
+  }
 
   public startConnection() {
-    const signalRServerEndPoint = 'http://localhost:9013';
-    this.connection = $.hubConnection(signalRServerEndPoint);
+    this.connection = $.hubConnection(this.signalRServerEndPoint);
 
     this.proxy = this.connection.createHubProxy('contract');
     this.proxy.on('doOnConnectAndOnDisconnect', () => {}); // Needed so OnConnected and OnDisconnected will fire
