@@ -35,7 +35,11 @@ export class ContractSignalRService {
 
   public save(contractJson: string): void {
     this.proxy.invoke('Save', contractJson)
-      .catch((error: any) => {
+      .done(() => {
+        this.connection.stop();
+        window.close();
+      })
+      .fail((error: any) => {
         console.log('broadcastMessage error -> ' + error);
       });
   }

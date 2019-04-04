@@ -62,6 +62,8 @@ namespace WpfApp
         }
         private void OnDataFromClient(string contractJson)
         {
+            // Bring the window to the front
+            this.Activate();
             AppendMessage($"Client sent: {contractJson}");
         }
 
