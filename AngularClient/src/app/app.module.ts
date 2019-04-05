@@ -3,13 +3,13 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ContractFormComponent } from './contract-form/contract-form.component';
+import { UserProfileFormComponent } from './user-profile/user-profile-form.component';
 import {FormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ContractFormComponent
+    UserProfileFormComponent
   ],
   imports: [
     BrowserModule,

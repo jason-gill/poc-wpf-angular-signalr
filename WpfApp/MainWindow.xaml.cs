@@ -10,61 +10,61 @@ namespace WpfApp
     public partial class MainWindow : Window
     {
         private HubConnection _hubConnection;
-        private IHubProxy _contractHubProxy;
+        private IHubProxy _userProfileHubProxy;
 
         private const string AngularUrl = "http://localhost:4200";
-        private const string HubName = "contract";
+        private const string HubName = "userProfile";
 
         public MainWindow()
         {
             InitializeComponent();
 
             _hubConnection = new HubConnection(SignalRUri.Url);
-            _contractHubProxy = _hubConnection.CreateHubProxy(HubName);
+            _userProfileHubProxy = _hubConnection.CreateHubProxy(HubName);
 
-            _contractHubProxy.On("OnClientConnect", (clientId) =>
+            _userProfileHubProxy.On("OnClientConnect", (clientId) =>
                 Dispatcher.InvokeAsync(() =>
                 {
-                    OnClientConnect(clientId);
+                    OnAngularClientConnect(clientId);
                 }));
-            _contractHubProxy.On<dynamic>("OnClientDisconnected", data =>
+            _userProfileHubProxy.On<dynamic>("OnClientDisconnected", data =>
                 Dispatcher.InvokeAsync(() =>
                 {
-                    OnClientDisconnected(data.stopCalled.Value, data.clientId.Value);
+                    OnAngularClientDisconnected(data.stopCalled.Value, data.clientId.Value);
                 }));
-            _contractHubProxy.On("OnDataFromClient", data =>
+            _userProfileHubProxy.On("OnReceivedFromAngularClient", data =>
                 Dispatcher.InvokeAsync(() =>
                 {
-                    OnDataFromClient(data);
+                    OnReceivedFromAngularClient(data);
                 }));
 
             _hubConnection.Start().Wait();
         }
 
-        private void OnClientConnect(string clientId)
+        private void OnAngularClientConnect(string clientId)
         {
-            AppendMessage($"Client connected: {clientId}");
+            AppendMessage($"Angular Client id:{clientId} connected.");
 
-            var contractName = "<Contract Name>";
-            _contractHubProxy.Invoke("SendToClient", clientId, contractName);
-            AppendMessage($"Sent contract name: {contractName} to client: {clientId}");
+            var userProfileJson = "{\"FirstName\":\"Peter\", \"LastName\":\"Rabbit\"}";
+            _userProfileHubProxy.Invoke("SendToAngularClient", clientId, userProfileJson);
+            AppendMessage($"Sent user profile json: {userProfileJson} to Angular Client: {clientId}");
         }
-        private void OnClientDisconnected(bool stopCalled, string clientId)
+        private void OnAngularClientDisconnected(bool stopCalled, string clientId)
         {
             if (stopCalled)
             {
-                AppendMessage($"Client {clientId} explicitly closed the connection. (e.g Called stop or closed the browser)");
+                AppendMessage($"Angular Client {clientId} explicitly closed the connection. (e.g Called stop or closed the browser)");
             }
             else
             {
-                AppendMessage($"WARNING: Client {clientId} timed out!");
+                AppendMessage($"WARNING: Angular Client {clientId} timed out!");
             }
         }
-        private void OnDataFromClient(string contractJson)
+        private void OnReceivedFromAngularClient(string jsonBlob)
         {
             // Bring the window to the front
             this.Activate();
-            AppendMessage($"Client sent: {contractJson}");
+            AppendMessage($"Angular Client sent: {jsonBlob}");
         }
 
         private void ClearMessages()

@@ -6,17 +6,27 @@ using Microsoft.AspNet.SignalR.Hubs;
 
 namespace WpfApp
 {
-    [HubName("contract")]
-    public class ContractHub : BaseHub
+    [HubName("userProfile")]
+    public class UserProfileHub : BaseHub
     {
-        public void Save(string contractJson)
+        /// <summary>
+        /// Used by the Angular Client to send data to the WpfApp 
+        /// </summary>
+        /// <param name="jsonBlob"></param>
+        public void SendToWpfApp(string jsonBlob)
         {
-            Clients.Others.OnDataFromClient(contractJson);
+            Clients.Others.OnReceivedFromAngularClient(jsonBlob);
         }
 
-        public void SendToClient(string clientId, string contractName)
+        /// <summary>
+        /// Used by the WpfApp to send data to the Angular Client 
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <param name="jsonBlob"></param>
+        public void SendToAngularClient(string clientId, string jsonBlob)
         {
-            Clients.Client(clientId).dataFromServer(contractName);
+            // The Angular Client should subscribe to 'OnReceivedFromServer' 
+            Clients.Client(clientId).OnReceivedFromWpfApp(jsonBlob);
         }
    }
 

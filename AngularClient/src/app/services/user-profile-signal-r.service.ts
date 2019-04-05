@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {Contract} from '../models/contract';
+import {UserProfile} from '../models/userProfile';
 import {ActivatedRoute} from '@angular/router';
 
 declare var $: any;
 @Injectable({
   providedIn: 'root'
 })
-export class ContractSignalRService {
-  private signalRServerEndPoint: string;
+export class UserProfileSignalRService {
+  private readonly signalRServerEndPoint: string;
   private connection: any;
   private proxy: any;
 
-  private contractSource = new BehaviorSubject<Contract>({});
-  public contract$ = this.contractSource.asObservable();
+  private userProfileSource = new BehaviorSubject<UserProfile>({});
+  public userProfile$ = this.userProfileSource.asObservable();
 
   constructor(private route: ActivatedRoute) {
     this.signalRServerEndPoint = this.route.snapshot.queryParamMap.get('signalRUrl');
@@ -22,25 +22,25 @@ export class ContractSignalRService {
   public startConnection() {
     this.connection = $.hubConnection(this.signalRServerEndPoint);
 
-    this.proxy = this.connection.createHubProxy('contract');
+    this.proxy = this.connection.createHubProxy('userProfile');
     this.proxy.on('doOnConnectAndOnDisconnect', () => {}); // Needed so OnConnected and OnDisconnected will fire
-    this.proxy.on('dataFromServer', (contractName) => this.contractSource.next(new Contract(contractName)));
+    this.proxy.on('OnReceivedFromWpfApp', (userProfileJson) => this.userProfileSource.next(JSON.parse(userProfileJson)));
 
     this.connection.start().done((data: any) => {
       console.log('Connected to Notification Hub');
-    }).catch((error: any) => {
+    }).fail((error: any) => {
       console.log('Notification Hub error -> ' + error);
     });
   }
 
-  public save(contractJson: string): void {
-    this.proxy.invoke('Save', contractJson)
+  public save(userProfileJson: string): void {
+    this.proxy.invoke('SendToWpfApp', userProfileJson)
       .done(() => {
-        this.connection.stop();
+        this.connection.stop(false, true);
         window.close();
       })
       .fail((error: any) => {
-        console.log('broadcastMessage error -> ' + error);
+        console.log('ERROR: Failed to send to WpfApp -> ' + error);
       });
   }
 }

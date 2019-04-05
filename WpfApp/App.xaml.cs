@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Owin.Hosting;
 
@@ -12,7 +11,7 @@ namespace WpfApp
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            // Start SignalR here
+            // Start SignalR server 
             Task.Run(() => this.StartWebServer());
 
             // Create the startup window
@@ -25,7 +24,6 @@ namespace WpfApp
             var url = SignalRUri.Url;
 
             WebApp.Start<WebStartupConfig>(url);
-            Debug.WriteLine($"Server started at: {url}");
         }
     }
 }

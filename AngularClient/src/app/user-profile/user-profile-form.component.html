@@ -1,0 +1,18 @@
+<div class="container">
+  <h1>User Profile</h1>
+  <form (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="name">First Name</label>
+      <input type="text" class="form-control" id="FirstName"
+             required
+             [(ngModel)]="userProfile.FirstName" name="FirstName" />
+    </div>
+    <div class="form-group">
+      <label for="name">Last Name</label>
+      <input type="text" class="form-control" id="LastName"
+             required
+             [(ngModel)]="userProfile.LastName" name="LastName" />
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
