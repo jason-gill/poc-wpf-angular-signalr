@@ -15,6 +15,7 @@ namespace WpfApp
         /// <param name="jsonBlob"></param>
         public void SendToWpfApp(string jsonBlob)
         {
+            // The WpfApp should subscribe to 'OnReceivedFromAngularClient'
             Clients.Others.OnReceivedFromAngularClient(jsonBlob);
         }
 
